@@ -1,5 +1,4 @@
 # payment-system
-# payment-system
 - nhưng yêu cầu chưa thực hiện được: 
  + Sử dụng database postgres [Vì máy của em cài postgres bị lỗi nên em dùng Mysql];
  + Chưa dùng transaction
@@ -13,7 +12,7 @@ CÁCH RUN SERVER:
 - Sau đó vào terminal chạy câu lệnh: >> npm start
 ==================================
 tạo dữ liệu:
----------
+---------------
 Product: 
 insert into payment_system.products(product_name, price) values ('iphone X', '15000');
 insert into payment_system.products(product_name, price) values ('iphone 11', '16000');
