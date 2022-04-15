@@ -3,13 +3,6 @@ const connectDB = require("../models/index");
 const sequelize = connectDB();
 const product = Product.Product;
 const { createClient } = require("redis");
-// const { promisify } = require("util");
-// const axios = require("axios");
-// const REDIS_PORT = process.env.REDIS_PORT || 6379;
-// const client = redis.createClient({
-//     host: '127.0.0.1',
-//     port: REDIS_PORT || 6379,
-// });
 
 const client = createClient();
 client.on('error', (err) => console.log('Redis Client Error', err));
@@ -17,14 +10,7 @@ client.on('error', (err) => console.log('Redis Client Error', err));
 
 (async() => {
     await client.connect();
-    // const setval = await client.set('key', 'value');
-    // console.log(setval);
-    // // const value = await client.get('key');
-    // console.log(await client.get('key'));
 })();
-
-// const GET_ASYNC = promisify(client.get).bind(client);
-// const SET_ASYNC = promisify(client.set).bind(client);
 
 setResp = (id, data) => {
     return data;
@@ -43,6 +29,12 @@ exports.create = (req, res) => {
         product_name: req.body.product_name,
         price: req.body.price,
     };
+    if (product_info.product_name == null || product_info.price == null) {
+        res.status(400).send({
+            message: "product info can't empty!",
+        });
+        return;
+    }
 
     product
         .create(product_info)

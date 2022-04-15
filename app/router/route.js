@@ -13,13 +13,16 @@ routes = (app) => {
     app.get('/api/product/:tagId', ProductConller.cache, ProductConller.findOne);
     // create new product
     app.post('/api/product/create', ProductConller.create);
-
+    // update produce
     app.patch('/api/product/update', ProductConller.update);
+    // delete product
     app.get('/api/product/delete/:tagId', ProductConller.delete);
+    // search product
     app.post('/api/product/search', ProductConller.findbyname);
+    // create bill 
     app.post('/api/transaction/create', TransactionController.create)
-    app.get('/api/transaction/:tagId', TransactionController.findByIdCustomer);
-
+        // get list of user
+    app.get('/api/transaction/:tagId', TransactionController.cache, TransactionController.findByIdCustomer);
 }
 
 module.exports = routes;

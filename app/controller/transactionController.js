@@ -3,30 +3,15 @@ const connectDB = require('../models/index');
 const sequelize = connectDB();
 const transaction = Product_transactions.ProductTransaction
 
+const { createClient } = require("redis");
 
-// exports.create = (req, res) => {
-//     if (!req.body) {
-//         res.status(400).send({
-//             message: "data can not be empty!"
-//         });
-//         return;
-//     }
-//     const sell_info = {
-//         user_id: req.body.user_id,
-//         product_id: req.body.product_id,
-//         price: req.body.price
-//     };
-//     console.log(sell_info);
-//     transaction.create(sell_info)
-//         .then(data => {
-//             res.send(data);
-//         })
-//         .catch(err => {
-//             res.status(500).send({
-//                 message: err.message || "can't save new product"
-//             });
-//         });
-// };
+const client = createClient();
+client.on('error', (err) => console.log('Redis Client Error', err));
+
+
+(async() => {
+    await client.connect();
+})();
 
 exports.create = async(req, res) => {
     if (!req.body) {
@@ -63,6 +48,21 @@ exports.findByIdCustomer = async(req, res) => {
             message: `data not found`
         });
     } else {
+        const setStatus = await client.set(id, resData)
+        console.log('set >> ', setStatus);
         res.status(200).send(resData);
+    }
+}
+
+exports.cache = async(req, res, next) => {
+    const id = req.params.tagId;
+    const reply = await client.get(id);
+    console.log('transaction rep', reply);
+    if (reply !== null) {
+        res.send(reply)
+        console.log('transaction sended');
+        return;
+    } else {
+        next();
     }
 }
