@@ -24,6 +24,7 @@ insert into payment_system.products(product_name, price) values ('LG v10', '1500
 
 ==================================
 Tạo procedure:
+
 delimiter $$
 DROP PROCEDURE IF EXISTS bill_save;
 CREATE PROCEDURE bill_save (IN user_name VARCHAR(255), IN product_id INT(11),IN price INT(11))
@@ -36,6 +37,8 @@ BEGIN
 	commit;
 END;
 delimiter;
+
+
 ==================================
 URL: http://localhost:3000
 ==================================
