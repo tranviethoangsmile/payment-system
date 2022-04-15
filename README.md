@@ -23,13 +23,19 @@ insert into payment_system.products(product_name, price) values ('xiami ', '1500
 insert into payment_system.products(product_name, price) values ('LG v10', '15000');
 
 ---------
-User:
-insert into payment_system.users(name) values ('Hoang');
-insert into payment_system.users(name) values ('Phong');
-insert into payment_system.users(name) values ('Cuong');
-insert into payment_system.users(name) values ('Tam');
-insert into payment_system.users(name) values ('Nhi');
-
+Tạo procedure:
+delimiter $$
+DROP PROCEDURE IF EXISTS bill_save;
+CREATE PROCEDURE bill_save (IN user_name VARCHAR(255), IN product_id INT(11),IN price INT(11))
+BEGIN 
+	declare exit handler for sqlexception rollback;
+	start transaction;
+    INSERT INTO users (name) VALUES (user_name);
+    INSERT INTO product_transactions(price,user_id,product_id)
+	VALUES (price,LAST_INSERT_ID(),product_id);
+	commit;
+END;
+delimiter;
 ==================================
 URL: http://localhost:3000
 ==================================
