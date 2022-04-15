@@ -1,5 +1,8 @@
 const ProductConller = require('../controller/productController');
 const TransactionController = require('../controller/transactionController');
+const redis = require('redis');
+const REDIS_PORT = process.env.REDIS_PORT || 5000;
+const client = redis.createClient(REDIS_PORT);
 routes = (app) => {
     app.get('/', (req, res) => {
         res.render('system');
@@ -16,7 +19,6 @@ routes = (app) => {
     app.post('/api/product/search', ProductConller.findbyname);
     app.post('/api/transaction/create', TransactionController.create)
     app.get('/api/transaction/:tagId', TransactionController.findByIdCustomer);
-
 
 }
 
