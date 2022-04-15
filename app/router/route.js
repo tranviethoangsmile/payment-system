@@ -10,7 +10,7 @@ routes = (app) => {
     // get all product 
     app.get('/api/product/getall', ProductConller.findAll);
     // get product by id
-    app.get('/api/product/:tagId', ProductConller.findOne);
+    app.get('/api/product/:tagId', ProductConller.cache, ProductConller.findOne);
     // create new product
     app.post('/api/product/create', ProductConller.create);
 

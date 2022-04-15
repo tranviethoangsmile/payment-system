@@ -2,17 +2,29 @@ const Product = require("../models/product");
 const connectDB = require("../models/index");
 const sequelize = connectDB();
 const product = Product.Product;
-const redis = require("redis");
-const { promisify } = require("util");
-const axios = require("axios");
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
-const client = redis.createClient({
-    host: '127.0.0.1',
-    port: REDIS_PORT || 6379,
-});
+const { createClient } = require("redis");
+// const { promisify } = require("util");
+// const axios = require("axios");
+// const REDIS_PORT = process.env.REDIS_PORT || 6379;
+// const client = redis.createClient({
+//     host: '127.0.0.1',
+//     port: REDIS_PORT || 6379,
+// });
 
-const GET_ASYNC = promisify(client.get).bind(client);
-const SET_ASYNC = promisify(client.set).bind(client);
+const client = createClient();
+client.on('error', (err) => console.log('Redis Client Error', err));
+
+
+(async() => {
+    await client.connect();
+    // const setval = await client.set('key', 'value');
+    // console.log(setval);
+    // // const value = await client.get('key');
+    // console.log(await client.get('key'));
+})();
+
+// const GET_ASYNC = promisify(client.get).bind(client);
+// const SET_ASYNC = promisify(client.set).bind(client);
 
 setResp = (id, data) => {
     return data;
@@ -60,80 +72,42 @@ exports.findAll = (req, res) => {
             findLog("find not success");
         });
 };
-// exports.findOne = async(req, res) => {
-//     const id = req.params.tagId;
-//     const respNow = await GET_ASYNC(id);
-//     console.log(respNow);
-//     if (respNow !== null) {
-//         res.send(respNow);
-//         return;
-//     } else {
-//         try {
-//             product
-//                 .findByPk(id)
-//                 .then((data) => {
-//                     if (data) {
-//                         const saveValue = SET_ASYNC(id, data, EX, 5);
-//                         console.log('set', saveValue)
-//                         res.send(data);
-//                         findLog("find success");
-//                     } else {
-//                         res.status(403).send({
-//                             message: `Cannot find product with id=${id}.`,
-//                         });
-//                         findLog("find not success");
-//                     }
-//                 })
 
-//         } catch (error) {
-//             res.status(500).send({
-//                 message: `error`,
-//             });
-//             findLog("find not success");
-//         }
-//     }
-
-// };
-
-exports.findOne = async(req, res, next) => {
+exports.findOne = async(req, res) => {
+    const id = req.params.tagId;
     try {
-        // const id = req.params.tagId
-        // console.log('1')
-        // const replyNow = await GET_ASYNC('rockets')
-        // console.log('2')
-        // if (replyNow) {
-        //     console.log('using data saved cache');
-        //     res.send(replyNow);
-        //     return;
-        // }
-
-        const response = await axios.get('https://api.spacexdata.com/v3/capsules')
-        console.log('1')
-        const saveResult = await SET_ASYNC('capsules', JSON.stringify(response.data), 'EX', 5);
-        console.log('save new data to cache ', saveResult);
-        res.send(JSON.stringify(response.data));
-
+        product
+            .findByPk(id)
+            .then(async(data) => {
+                findLog("run")
+                const saveValue = await client.set(id, JSON.stringify(data));
+                findLog("set data to cache " + saveValue)
+                res.send(data);
+                findLog("find success");
+            })
     } catch (error) {
-        res.send(error.message)
+        res.status(500).send({
+            message: `error`,
+        });
+        findLog("find not success");
     }
+};
 
-}
+
 
 // cache
 const cache = productWriteLogger('CACHE')
 exports.cache = async(req, res, next) => {
-    next();
     const id = req.params.tagId;
-    client.get(1, (err, result) => {
-        cache('run')
-        if (err) {
-            cache('error', err)
-            next()
-        }
-        if (result !== null) {
-            console.log(result)
-        }
-    })
+    const reply = await client.get(id);
+    cache('get data ok ')
+    if (reply !== null) {
+        res.send(reply)
+        cache('sended')
+        return;
+    } else {
+        next();
+    }
 }
 
 exports.findbyname = async(req, res) => {
