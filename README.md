@@ -22,7 +22,7 @@ insert into payment_system.products(product_name, price) values ('samsung s10', 
 insert into payment_system.products(product_name, price) values ('xiami ', '15000');
 insert into payment_system.products(product_name, price) values ('LG v10', '15000');
 
----------
+==================================
 Tạo procedure:
 delimiter $$
 DROP PROCEDURE IF EXISTS bill_save;
