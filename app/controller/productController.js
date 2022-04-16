@@ -1,5 +1,5 @@
 const Product = require("../models/product");
-const connectDB = require("../models/index");
+const connectDB = require("../models/connectDB");
 const sequelize = connectDB();
 const product = Product.Product;
 const { createClient } = require("redis");

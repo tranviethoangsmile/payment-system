@@ -1,5 +1,5 @@
 const Product_transactions = require('../models/product_transactions');
-const connectDB = require('../models/index');
+const connectDB = require('../models/connectDB');
 const sequelize = connectDB();
 const transaction = Product_transactions.ProductTransaction
 
