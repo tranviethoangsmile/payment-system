@@ -50,7 +50,7 @@ exports.create = (req, res) => {
 };
 
 const findLog = productWriteLogger("FIND");
-exports.findAll = (req, res) => {
+exports.findAll = async(req, res) => {
     product
         .findAll()
         .then((data) => {
@@ -95,7 +95,7 @@ exports.cache = async(req, res, next) => {
     cache('get data ok ')
     if (reply !== null) {
         res.send(reply)
-        cache('sended')
+        cache('cache sended')
         return;
     } else {
         next();
