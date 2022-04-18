@@ -1,1 +1,8 @@
-GET http://localhost:3000/api/product/3
+GET http://localhost:3000/api/product/getall
+
+POST http://localhost:3000/api/product/create
+content-type: application/json
+{
+    "product_name": "iphone 15",
+    "price": 10
+}

@@ -21,19 +21,19 @@ exports.create = async(req, res) => {
         return;
     }
     const customer_buy = {
-        user_name: req.body.user_name,
-        product_id: req.body.product_id,
-        price: req.body.price,
-    }
-    if (customer_buy.user_name == null || customer_buy.product_id == null || customer_buy.price == null) {
-        res.status(400).send({
-            message: "data can not be empty!"
-        });
-        return;
-    }
-    const result = await sequelize.query(`
-    CALL bill_save('${customer_buy.user_name}',${customer_buy.product_id}, ${customer_buy.price})
-    `)
+            user_name: req.body.user_name,
+            product_id: req.body.product_id,
+            price: req.body.price,
+        }
+        // if (customer_buy.user_name == null || customer_buy.product_id == null || customer_buy.price == null) {
+        //     res.status(400).send({
+        //         message: "data can not be empty!"
+        //     });
+        //     return;
+        // }
+        // const result = await sequelize.query(`
+        // CALL bill_save('${customer_buy.user_name}',${customer_buy.product_id}, ${customer_buy.price})
+        // `)
     res.status(200).send({
         message: "success"
     });
