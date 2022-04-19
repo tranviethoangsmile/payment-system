@@ -21,7 +21,6 @@ client.on('error', (err) => console.log('Redis Client Error', err));
 
 // create
 const logCreate = logTransaction('CREATE')
-
 exports.create = async(req, res) => {
     if (!req.body) {
         logCreate('DATA FAIL')
@@ -38,23 +37,23 @@ exports.create = async(req, res) => {
         price: req.body.price,
     }
 
-    // check login
-    if (customer_buy.user_id == null) {
-        logCreate('USER_ID EMPTY!')
-        res.status(400).send({
-            message: "please login!"
-        });
-        return;
-    }
+    // // check login
+    // if (customer_buy.user_id == null) {
+    //     logCreate('USER_ID EMPTY!')
+    //     res.status(400).send({
+    //         message: "please login!"
+    //     });
+    //     return;
+    // }
 
     // check null data request
-    if (customer_buy.product_id == null || customer_buy.price == null) {
-        logCreate('PRODUCT_ID OR PRICE EMPTY')
-        res.status(400).send({
-            message: "data can not be empty!"
-        });
-        return;
-    }
+    // if (customer_buy.product_id == null || customer_buy.price == null) {
+    //     logCreate('PRODUCT_ID OR PRICE EMPTY')
+    //     res.status(400).send({
+    //         message: "data can not be empty!"
+    //     });
+    //     return;
+    // }
 
     // check user in database exist
     const user_value = await user.findByPk(customer_buy.user_id);
@@ -111,7 +110,7 @@ exports.findByIdUser = async(req, res) => {
         });
     } else {
         const setStatus = await client.set(`user_${id}`, JSON.stringify(resData))
-        console.log('set >> ', setStatus);
+        console.log('set cache: ', setStatus);
         res.status(200).send(resData);
         logFind('FIND DATA SUCCESS!')
         return;
@@ -123,7 +122,7 @@ exports.findByIdUser = async(req, res) => {
 exports.cache = async(req, res, next) => {
     const id = req.params.tagId;
     const reply = await client.get(`user_${id}`);
-    console.log('transaction rep', reply);
+    console.log('transaction reply client');
     if (reply !== null) {
         res.send(reply)
         console.log('transaction sended');
