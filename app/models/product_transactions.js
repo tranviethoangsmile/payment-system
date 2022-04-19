@@ -24,6 +24,8 @@ const ProductTransaction = sequelize.define('product_transactions', {
             key: 'id'
         }
     },
+}, {
+    timestamps: false,
 });
 
 module.exports = { ProductTransaction: ProductTransaction };

@@ -8,6 +8,8 @@ const User = sequelize.define('users', {
         allowNull: false
     }
 
+}, {
+    timestamps: false,
 });
 
 module.exports = { User: User };

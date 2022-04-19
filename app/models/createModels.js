@@ -1,3 +1,4 @@
+// don't use
 const Sequelize = require('sequelize');
 const connectDB = require('./connectDB');
 const sequelize = connectDB();

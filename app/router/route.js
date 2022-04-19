@@ -8,7 +8,7 @@ routes = (app) => {
         res.render('system');
     });
     // get all product 
-    app.get('/api/product/:getall', ProductConller.findAll);
+    app.get('/api/product/getall', ProductConller.findAll);
     // get product by id
     app.get('/api/product/:tagId', ProductConller.cache, ProductConller.findOne);
     // create new product
@@ -22,7 +22,7 @@ routes = (app) => {
     // create bill 
     app.post('/api/transaction/create', TransactionController.create)
         // get list of user
-    app.get('/api/transaction/:tagId', TransactionController.cache, TransactionController.findByIdCustomer);
+    app.get('/api/transaction/:tagId', TransactionController.cache, TransactionController.findByIdUser);
 }
 
 module.exports = routes;

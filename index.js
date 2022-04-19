@@ -12,8 +12,10 @@ const port = process.env.PORT || 3000;
 routes(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const creataModels = require("./app/models/createModels")
-creataModels();
+
+// const creataModels = require("./app/models/createModels")
+// creataModels();
+
 app.listen(port, () => {
     console.log(`APP LISTENING ON PORT ${port}`)
 })

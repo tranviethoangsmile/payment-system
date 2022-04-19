@@ -58,10 +58,10 @@ exports.create = (req, res) => {
 // find All product
 const findLog = productWriteLogger("FIND");
 exports.findAll = async(req, res) => {
-    const dataRep = await client.get(req.params.getall);
-    if (dataRep != null) {
+    const all_product = await client.get('getall');
+    if (all_product != null) {
         findLog("CACHE REPLY")
-        res.status(200).send(dataRep);
+        res.status(200).send(all_product);
         return;
     }
     product
@@ -89,7 +89,7 @@ exports.findOne = async(req, res) => {
         product
             .findByPk(id)
             .then(async(data) => {
-                findLog("RUN")
+                findLog("FIND ONE RUN")
                 const saveValue = await client.set(id, JSON.stringify(data));
                 findLog("set data to cache " + saveValue)
                 res.status(200).send(data);
@@ -140,16 +140,19 @@ exports.update = async(req, res) => {
     } else if (product_name == undefined && price != undefined) {
         const respData = await product.update({ price: price }, { where: { id: id } });
         client.del('getall');
+        client.del(id);
         res.status(200).send({ message: "updated" });
         updateLog("update success");
     } else if (product_name != undefined && price == undefined) {
         const respData = await product.update({ product_name: product_name }, { where: { id: id } });
         client.del('getall');
+        client.del(id);
         res.status(200).send({ message: "updated" });
         updateLog("update success");
     } else {
         const respData = await product.update({ product_name: product_name, price: price }, { where: { id: id } });
         client.del('getall');
+        client.del(id);
         res.status(200).send({ message: "updated" });
         updateLog("update success");
     }
@@ -168,7 +171,7 @@ exports.delete = (req, res) => {
             if (num == 1) {
                 client.del('getall');
                 res.send({
-                    message: " deleted successfully!",
+                    message: "deleted successfully!",
                 });
                 deleteLog("deleted");
             } else {
@@ -192,6 +195,7 @@ const cache = productWriteLogger('CACHE')
 exports.cache = async(req, res, next) => {
     const id = req.params.tagId;
     const reply = await client.get(id);
+    console.log(reply)
     cache('get data ok ')
     if (reply !== null) {
         res.send(reply)
