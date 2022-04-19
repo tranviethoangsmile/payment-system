@@ -1,15 +1,29 @@
 # payment-system
-- nhưng yêu cầu chưa thực hiện được: 
- + Sử dụng database postgres [Vì máy của em cài postgres bị lỗi nên em dùng Mysql];
- + Chưa dùng transaction
- + chưa sử dụng redis
 ==================================
 TẠO DATABASE VỚI TÊN: payment_system
 CREATE DATABASE payment_system
-==================================
-CÁCH RUN SERVER: 
-- Sau khi clone từ git về máy tính. Mở file lên với vs code.
-- Sau đó vào terminal chạy câu lệnh: >> npm start
+CREATE TABLE users (
+    id int NOT NULL AUTO_INCREMENT,
+    name varchar(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE products (
+    id int NOT NULL AUTO_INCREMENT,
+    product_name varchar(255) NOT NULL,
+    price float NOT NULL,
+    PRIMARY KEY (id)
+);
+CREATE TABLE product_transactions (
+	id int NOT NULL AUTO_INCREMENT,
+    price float NOT NULL,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
 ==================================
 tạo dữ liệu:
 ---------------
@@ -21,25 +35,11 @@ insert into payment_system.products(product_name, price) values ('iphone 13', '3
 insert into payment_system.products(product_name, price) values ('samsung s10', '15000');
 insert into payment_system.products(product_name, price) values ('xiami ', '15000');
 insert into payment_system.products(product_name, price) values ('LG v10', '15000');
-
 ==================================
-Tạo procedure:
+CÁCH RUN SERVER: 
+- Sau khi clone từ git về máy tính. Mở file lên với vs code.
+- Sau đó vào terminal chạy câu lệnh: >> npm start
 
-delimiter $$
-DROP PROCEDURE IF EXISTS bill_save;
-CREATE PROCEDURE bill_save (IN user_name VARCHAR(255), IN product_id INT(11),IN price INT(11))
-BEGIN 
-	declare exit handler for sqlexception rollback;
-	start transaction;
-    INSERT INTO users (name) VALUES (user_name);
-    INSERT INTO product_transactions(price,user_id,product_id)
-	VALUES (price,LAST_INSERT_ID(),product_id);
-	commit;
-END;
-delimiter;
-
-
-==================================
 URL: http://localhost:3000
 ==================================
 Danh sách API sử dụng:
